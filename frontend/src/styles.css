@@ -149,3 +149,93 @@ td {
 .status--error {
   color: #ff8a80;
 }
+
+.grid + .card,
+.card + .card,
+.card + .status {
+  margin-top: 16px;
+}
+
+.stints {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.stint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stint__label {
+  width: 64px;
+  color: var(--muted);
+}
+
+.stint input {
+  width: 88px;
+  font: inherit;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.hint {
+  margin: 4px 0;
+  color: var(--muted);
+}
+
+.hint--warn {
+  color: #ffb74d;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.result__total {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stintbar {
+  display: flex;
+  gap: 2px;
+  margin: 16px 0;
+}
+
+.stintbar .compound {
+  border-radius: 6px;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.8rem;
+  padding: 6px 4px;
+}
+
+h3 {
+  margin: 16px 0 8px;
+  font-size: 0.95rem;
+}

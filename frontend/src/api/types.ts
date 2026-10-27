@@ -71,6 +71,49 @@ export interface Driver {
   team: Team | null;
 }
 
+export interface Stint {
+  compound: Compound;
+  laps: number;
+}
+
+export interface StrategyIssue {
+  code: string;
+  message: string;
+}
+
+export interface StintResult {
+  index: number;
+  compound: Compound;
+  startLap: number;
+  endLap: number;
+  laps: number;
+  timeSeconds: number;
+  averageLapSeconds: number;
+  degradationLossSeconds: number;
+  wetPenaltySeconds: number;
+}
+
+export interface PitStopResult {
+  afterLap: number;
+  fromCompound: Compound;
+  toCompound: Compound;
+  lossSeconds: number;
+}
+
+export interface SimulationResult {
+  totalTimeSeconds: number;
+  totalPitLossSeconds: number;
+  stints: StintResult[];
+  pitStops: PitStopResult[];
+}
+
+export interface SimulationResponse {
+  race: Race;
+  driver: Omit<Driver, "team">;
+  team: Team;
+  result: SimulationResult;
+}
+
 export interface RaceOverview {
   race: Race;
   circuit: Circuit;

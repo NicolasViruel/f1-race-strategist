@@ -1,6 +1,7 @@
 import { getRaceOverview } from "../api/client";
 import { useAsync } from "../hooks/useAsync";
 import { CircuitCard, DriversTable, RaceSummary, TyresTable, WeatherCard } from "./RaceInfo";
+import { SimulationPanel } from "./SimulationPanel";
 import { StatusMessage } from "./StatusMessage";
 
 /** Loads and shows everything about one race. Mount with `key={raceId}` to reset on change. */
@@ -16,12 +17,15 @@ export function RaceDetails({ raceId }: { raceId: string }) {
 
   const { race, circuit, weather, tyres, drivers } = overview.data;
   return (
-    <div className="grid">
-      <RaceSummary race={race} />
-      <CircuitCard circuit={circuit} />
-      <WeatherCard weather={weather} />
-      <TyresTable tyres={tyres} />
-      <DriversTable drivers={drivers} />
-    </div>
+    <>
+      <div className="grid">
+        <RaceSummary race={race} />
+        <CircuitCard circuit={circuit} />
+        <WeatherCard weather={weather} />
+        <TyresTable tyres={tyres} />
+        <DriversTable drivers={drivers} />
+      </div>
+      <SimulationPanel overview={overview.data} />
+    </>
   );
 }

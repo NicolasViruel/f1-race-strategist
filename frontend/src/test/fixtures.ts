@@ -1,4 +1,4 @@
-import type { RaceOverview } from "../api/types";
+import type { RaceOverview, SimulationResponse } from "../api/types";
 
 export const race = {
   id: "race-01",
@@ -73,3 +73,38 @@ export const overview: RaceOverview = {
 
 export const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+
+export const simulationResponse: SimulationResponse = {
+  race,
+  driver: { id: "driver-01", name: "Lando Norris", number: 4, teamId: "team-01", pace: 0.98, consistency: 0.94 },
+  team: { id: "team-01", name: "McLaren", carPerformance: 0.99 },
+  result: {
+    totalTimeSeconds: 5485,
+    totalPitLossSeconds: 24.5,
+    stints: [
+      {
+        index: 0,
+        compound: "SOFT",
+        startLap: 1,
+        endLap: 29,
+        laps: 29,
+        timeSeconds: 2800.5,
+        averageLapSeconds: 95.5,
+        degradationLossSeconds: 12.3,
+        wetPenaltySeconds: 0,
+      },
+      {
+        index: 1,
+        compound: "HARD",
+        startLap: 30,
+        endLap: 57,
+        laps: 28,
+        timeSeconds: 2660,
+        averageLapSeconds: 95,
+        degradationLossSeconds: 4.1,
+        wetPenaltySeconds: 0,
+      },
+    ],
+    pitStops: [{ afterLap: 29, fromCompound: "SOFT", toCompound: "HARD", lossSeconds: 24.5 }],
+  },
+};
