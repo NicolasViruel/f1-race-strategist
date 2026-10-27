@@ -16,7 +16,7 @@ Las citas del PDF se dejan en inglés textual (entre comillas) con su aclaració
 - S10 (supuesto) Validación: las vueltas de los stints suman las vueltas de la carrera, ningún stint vacío, compuestos conocidos, al menos `minimumPitStops` paradas, y al menos 2 compuestos distintos en carreras secas.
 
 ## Tasks
-- [x] T1 (S8) Scaffold de npm workspaces, TS, Vitest | inline | commit: c757329
+- [x] T1 (S8) Scaffold de npm workspaces, TS, Vitest | inline | commit: c12f81b
 - [x] T2 (S6, S9) Simulador puro en el dominio del backend, tests primero | inline | commit: ver git log (feat: simulator)
 - [x] T3 (S7, S10) Validación de la estrategia con Zod | inline | commit: ver git log (feat: validation)
 - [ ] T4 (S5, S7) Adaptador cliente de la API F1 con timeout, reintento y mapeo de errores | inline | commit: -
