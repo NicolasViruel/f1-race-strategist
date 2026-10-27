@@ -3,9 +3,9 @@ export type Compound = (typeof COMPOUNDS)[number];
 
 export interface Tyre {
   compound: Compound;
-  /** Seconds added to a lap versus HARD (negative = faster). */
+  /** Segundos que suma a una vuelta respecto al HARD (negativo = más rápido). */
   pace: number;
-  /** Seconds lost per lap of tyre age, before the circuit wear factor. */
+  /** Segundos que se pierden por cada vuelta de uso, antes del factor de desgaste del circuito. */
   degradation: number;
   wetPerformance: number;
   optimalRainIntensity: { min: number; max: number };
@@ -68,12 +68,12 @@ export interface StintResult {
   startLap: number;
   endLap: number;
   laps: number;
-  /** Driving time of the stint, excluding the pit stop that follows it. */
+  /** Tiempo de conducción del stint, sin la parada en boxes que le sigue. */
   timeSeconds: number;
   averageLapSeconds: number;
-  /** Total time lost to tyre wear within the stint. */
+  /** Tiempo total perdido por desgaste del neumático dentro del stint. */
   degradationLossSeconds: number;
-  /** Total time lost to running a compound unsuited to the rain. */
+  /** Tiempo total perdido por usar un compuesto que no sirve para la lluvia. */
   wetPenaltySeconds: number;
 }
 

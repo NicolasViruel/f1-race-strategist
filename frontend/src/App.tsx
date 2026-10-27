@@ -16,7 +16,7 @@ export function App() {
       {races.status === "loading" && (
         <StatusMessage
           kind="loading"
-          message="Loading races… The first request can take up to a minute while the F1 data service wakes up."
+          message="Cargando carreras… La primera solicitud puede tardar hasta un minuto mientras el servicio de datos de F1 se despierta."
         />
       )}
       {races.status === "error" && (

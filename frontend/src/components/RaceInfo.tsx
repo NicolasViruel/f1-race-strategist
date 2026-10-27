@@ -1,22 +1,22 @@
 import type { Circuit, Driver, Race, Tyre, Weather } from "../api/types";
 
 const percent = (value: number) => `${Math.round(value * 100)}%`;
-const rainLabel = (intensity: number) => (intensity === 0 ? "Dry" : `Rain ${percent(intensity)}`);
+const rainLabel = (intensity: number) => (intensity === 0 ? "Seco" : `Lluvia ${percent(intensity)}`);
 
 export function RaceSummary({ race }: { race: Race }) {
   return (
-    <section aria-label="Race" className="card">
+    <section aria-label="Resumen de la carrera" className="card">
       <h2>{race.name}</h2>
       <dl>
-        <dt>Round</dt>
+        <dt>Ronda</dt>
         <dd>{race.round}</dd>
-        <dt>Date</dt>
+        <dt>Fecha</dt>
         <dd>{race.date}</dd>
-        <dt>Distance</dt>
-        <dd>{race.laps} laps</dd>
-        <dt>Temperature</dt>
+        <dt>Distancia</dt>
+        <dd>{race.laps} vueltas</dd>
+        <dt>Temperatura</dt>
         <dd>{race.temperature}°C</dd>
-        <dt>Rain probability</dt>
+        <dt>Probabilidad de lluvia</dt>
         <dd>{percent(race.rainProbability)}</dd>
       </dl>
     </section>
@@ -25,23 +25,23 @@ export function RaceSummary({ race }: { race: Race }) {
 
 export function CircuitCard({ circuit }: { circuit: Circuit }) {
   return (
-    <section aria-label="Circuit" className="card">
-      <h2>Circuit</h2>
+    <section aria-label="Circuito" className="card">
+      <h2>Circuito</h2>
       <p className="card__title">{circuit.name}</p>
       <dl>
-        <dt>Country</dt>
+        <dt>País</dt>
         <dd>{circuit.country}</dd>
-        <dt>Type</dt>
+        <dt>Tipo</dt>
         <dd>{circuit.type}</dd>
-        <dt>Length</dt>
+        <dt>Longitud</dt>
         <dd>{circuit.lengthKm} km</dd>
-        <dt>Base lap time</dt>
+        <dt>Tiempo base de vuelta</dt>
         <dd>{circuit.baseLapTime} s</dd>
-        <dt>Pit stop loss</dt>
+        <dt>Pérdida por parada en boxes</dt>
         <dd>{circuit.pitStopLoss} s</dd>
-        <dt>Tyre wear</dt>
+        <dt>Desgaste de neumáticos</dt>
         <dd>×{circuit.tyreWear}</dd>
-        <dt>Overtaking difficulty</dt>
+        <dt>Dificultad de adelantamiento</dt>
         <dd>{percent(circuit.overtakingDifficulty)}</dd>
       </dl>
     </section>
@@ -50,14 +50,14 @@ export function CircuitCard({ circuit }: { circuit: Circuit }) {
 
 export function WeatherCard({ weather }: { weather: Weather }) {
   return (
-    <section aria-label="Weather" className="card">
-      <h2>Weather</h2>
+    <section aria-label="Clima" className="card">
+      <h2>Clima</h2>
       <p>{weather.summary}</p>
       <ul className="plain">
         {weather.forecast.map((segment) => (
           <li key={segment.fromLap}>
             <span>
-              Laps {segment.fromLap}–{segment.toLap}
+              Vueltas {segment.fromLap}–{segment.toLap}
             </span>{" "}
             · <span>{segment.temperature}°C</span> · <strong>{rainLabel(segment.rainIntensity)}</strong>
           </li>
@@ -69,17 +69,20 @@ export function WeatherCard({ weather }: { weather: Weather }) {
 
 export function TyresTable({ tyres }: { tyres: Tyre[] }) {
   return (
-    <section aria-label="Tyres" className="card">
-      <h2>Tyres</h2>
+    <section aria-label="Neumáticos" className="card">
+      <h2>Neumáticos</h2>
       <table>
-        <caption>Pace is seconds per lap versus HARD (negative is faster). Degradation is seconds lost per lap of age.</caption>
+        <caption>
+          El ritmo está en segundos por vuelta respecto al HARD (negativo es más rápido). La degradación son los
+          segundos que se pierden por cada vuelta de uso.
+        </caption>
         <thead>
           <tr>
-            <th>Compound</th>
-            <th>Pace</th>
-            <th>Degradation</th>
-            <th>Wet grip</th>
-            <th>Best in rain</th>
+            <th>Compuesto</th>
+            <th>Ritmo</th>
+            <th>Degradación</th>
+            <th>Agarre en mojado</th>
+            <th>Mejor con lluvia de</th>
           </tr>
         </thead>
         <tbody>
@@ -104,16 +107,16 @@ export function TyresTable({ tyres }: { tyres: Tyre[] }) {
 
 export function DriversTable({ drivers }: { drivers: Driver[] }) {
   return (
-    <section aria-label="Drivers" className="card">
-      <h2>Drivers</h2>
+    <section aria-label="Pilotos" className="card">
+      <h2>Pilotos</h2>
       <table>
         <thead>
           <tr>
             <th>#</th>
-            <th>Driver</th>
-            <th>Team</th>
-            <th>Driver pace</th>
-            <th>Car performance</th>
+            <th>Piloto</th>
+            <th>Equipo</th>
+            <th>Ritmo del piloto</th>
+            <th>Rendimiento del auto</th>
           </tr>
         </thead>
         <tbody>

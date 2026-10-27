@@ -20,16 +20,16 @@ export function buildApp(f1: F1Client, options: { logger?: boolean } = {}) {
         error: { code: error.code, message: error.message, issues: error.issues },
       });
     }
-    // Malformed JSON and similar client errors raised by Fastify itself.
+    // JSON mal formado y otros errores de cliente que lanza el propio Fastify.
     const status = (error as { statusCode?: number }).statusCode;
     if (status && status >= 400 && status < 500) {
       return reply.status(status).send({
-        error: { code: "INVALID_REQUEST", message: "The request could not be read." },
+        error: { code: "INVALID_REQUEST", message: "No se pudo leer la solicitud." },
       });
     }
     app.log.error(error);
     return reply.status(500).send({
-      error: { code: "INTERNAL_ERROR", message: "Something went wrong on our side." },
+      error: { code: "INTERNAL_ERROR", message: "Algo salió mal de nuestro lado." },
     });
   });
 

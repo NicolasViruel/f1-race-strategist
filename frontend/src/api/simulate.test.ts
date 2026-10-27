@@ -26,11 +26,11 @@ describe("simulateRace", () => {
   });
 
   it("carries the list of broken rules when the strategy is rejected", async () => {
-    const issues = [{ code: "LAPS_MISMATCH", message: "Stints add up to 49 laps but the race has 57." }];
+    const issues = [{ code: "LAPS_MISMATCH", message: "Los stints suman 49 vueltas pero la carrera tiene 57." }];
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(
-        jsonResponse({ error: { code: "INVALID_STRATEGY", message: "The strategy is not valid.", issues } }, 400),
+        jsonResponse({ error: { code: "INVALID_STRATEGY", message: "La estrategia no es válida.", issues } }, 400),
       ),
     );
 

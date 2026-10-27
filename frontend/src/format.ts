@@ -16,7 +16,7 @@ export function formatRaceTime(seconds: number): string {
   return `${t.hours}:${pad(t.minutes, 2)}:${pad(t.seconds, 2)}.${pad(t.ms, 3)}`;
 }
 
-/** 95.5 -> "1:35.500"; stints longer than an hour keep counting minutes. */
+/** 95.5 -> "1:35.500"; los stints de más de una hora siguen contando minutos. */
 export function formatLapTime(seconds: number): string {
   const t = split(seconds);
   return `${t.hours * 60 + t.minutes}:${pad(t.seconds, 2)}.${pad(t.ms, 3)}`;

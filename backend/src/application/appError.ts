@@ -8,7 +8,7 @@ export type AppErrorCode =
   | "F1_API_EMPTY"
   | "F1_API_INVALID_RESPONSE";
 
-/** A failure the user can understand, carrying the HTTP status it maps to. */
+/** Una falla que el usuario puede entender, con el estado HTTP al que corresponde. */
 export class AppError extends Error {
   constructor(
     readonly code: AppErrorCode,

@@ -20,15 +20,15 @@ export function StrategyBuilder(props: Props) {
   const assigned = assignedLaps(stints);
 
   return (
-    <section aria-label="Strategy" className="card">
-      <h2>Strategy</h2>
+    <section aria-label="Estrategia" className="card">
+      <h2>Estrategia</h2>
 
       <div className="field">
-        <label htmlFor="driver">Driver</label>
+        <label htmlFor="driver">Piloto</label>
         <select id="driver" value={driverId} onChange={(event) => props.onDriverChange(event.target.value)}>
           {drivers.map((driver) => (
             <option key={driver.id} value={driver.id}>
-              {driver.name} — {driver.team?.name ?? "No team"}
+              {driver.name} — {driver.team?.name ?? "Sin equipo"}
             </option>
           ))}
         </select>
@@ -39,7 +39,7 @@ export function StrategyBuilder(props: Props) {
           <li key={index} className="stint">
             <span className="stint__label">Stint {index + 1}</span>
             <select
-              aria-label={`Stint ${index + 1} compound`}
+              aria-label={`Compuesto del stint ${index + 1}`}
               value={stint.compound}
               onChange={(event) =>
                 props.onStintChange(index, { compound: event.target.value as Stint["compound"] })
@@ -55,35 +55,33 @@ export function StrategyBuilder(props: Props) {
               type="number"
               min={1}
               step={1}
-              aria-label={`Stint ${index + 1} laps`}
+              aria-label={`Vueltas del stint ${index + 1}`}
               value={stint.laps}
               onChange={(event) => props.onStintChange(index, { laps: Number(event.target.value) || 0 })}
             />
             <button
               type="button"
-              aria-label={`Remove stint ${index + 1}`}
+              aria-label={`Quitar stint ${index + 1}`}
               disabled={stints.length === 1}
               onClick={() => props.onRemoveStint(index)}
             >
-              Remove
+              Quitar
             </button>
           </li>
         ))}
       </ol>
 
       <p className={assigned === raceLaps ? "hint" : "hint hint--warn"}>
-        {assigned} of {raceLaps} laps assigned
+        {assigned} de {raceLaps} vueltas asignadas
       </p>
-      <p className="hint">
-        Pit stops: {Math.max(stints.length - 1, 0)}
-      </p>
+      <p className="hint">Paradas en boxes: {Math.max(stints.length - 1, 0)}</p>
 
       <div className="actions">
         <button type="button" onClick={props.onAddStint}>
-          Add stint
+          Agregar stint
         </button>
         <button type="button" className="primary" disabled={running} onClick={props.onRun}>
-          {running ? "Simulating…" : "Run simulation"}
+          {running ? "Simulando…" : "Ejecutar simulación"}
         </button>
       </div>
     </section>

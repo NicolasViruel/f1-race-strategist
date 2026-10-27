@@ -4,7 +4,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     readonly code?: string,
-    /** Broken strategy rules, present when the server rejects a strategy. */
+    /** Reglas rotas de la estrategia; viene cuando el servidor la rechaza. */
     readonly issues?: StrategyIssue[],
   ) {
     super(message);
@@ -17,7 +17,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     response = await fetch(path, init);
   } catch {
-    throw new ApiError("Could not reach the server. Check your connection and try again.");
+    throw new ApiError("No se pudo contactar al servidor. Revisa tu conexión e inténtalo de nuevo.");
   }
 
   const body: unknown = await response.json().catch(() => undefined);
@@ -26,7 +26,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     const error = (
       body as { error?: { code?: string; message?: string; issues?: StrategyIssue[] } } | undefined
     )?.error;
-    throw new ApiError(error?.message ?? "Something went wrong. Please try again.", error?.code, error?.issues);
+    throw new ApiError(error?.message ?? "Algo salió mal. Inténtalo de nuevo.", error?.code, error?.issues);
   }
   return body as T;
 }

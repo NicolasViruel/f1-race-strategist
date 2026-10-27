@@ -33,9 +33,9 @@ export class F1ApiError extends Error {
 export interface F1ClientOptions {
   baseUrl: string;
   fetch?: typeof fetch;
-  /** Per-attempt timeout. The hosted API can take up to a minute to wake up. */
+  /** Tiempo máximo por intento. La API alojada puede tardar hasta un minuto en despertar. */
   timeoutMs?: number;
-  /** Extra attempts after the first one, for timeouts, network errors and 5xx. */
+  /** Intentos extra después del primero, para timeouts, errores de red y 5xx. */
   retries?: number;
   retryDelayMs?: number;
 }
@@ -65,37 +65,37 @@ export function createF1Client(options: F1ClientOptions) {
       } catch (cause) {
         lastError = new F1ApiError(
           "UNAVAILABLE",
-          `F1 API unreachable (${cause instanceof Error ? cause.message : "unknown error"}).`,
+          `No se pudo contactar la API de F1 (${cause instanceof Error ? cause.message : "error desconocido"}).`,
         );
         continue;
       }
 
       if (response.status === 404) {
-        throw new F1ApiError("NOT_FOUND", `F1 API has no resource at ${path}.`);
+        throw new F1ApiError("NOT_FOUND", `La API de F1 no tiene el recurso ${path}.`);
       }
       if (response.status >= 500) {
-        lastError = new F1ApiError("UNAVAILABLE", `F1 API responded with ${response.status}.`);
+        lastError = new F1ApiError("UNAVAILABLE", `La API de F1 respondió con el estado ${response.status}.`);
         continue;
       }
       if (!response.ok) {
-        throw new F1ApiError("INVALID_RESPONSE", `Unexpected F1 API status ${response.status}.`);
+        throw new F1ApiError("INVALID_RESPONSE", `Estado inesperado de la API de F1: ${response.status}.`);
       }
 
       const body: unknown = await response.json().catch(() => undefined);
       const envelope = envelopeSchema.safeParse(body);
       if (!envelope.success) {
-        throw new F1ApiError("INVALID_RESPONSE", "F1 API returned a body that is not JSON data.");
+        throw new F1ApiError("INVALID_RESPONSE", "La API de F1 devolvió un cuerpo que no es JSON con datos.");
       }
       return envelope.data.data;
     }
 
-    throw lastError ?? new F1ApiError("UNAVAILABLE", "F1 API unavailable.");
+    throw lastError ?? new F1ApiError("UNAVAILABLE", "API de F1 no disponible.");
   }
 
   async function request<T>(path: string, schema: z.ZodType<T>): Promise<T> {
     const parsed = schema.safeParse(await fetchData(path));
     if (!parsed.success) {
-      throw new F1ApiError("INVALID_RESPONSE", `F1 API response for ${path} has an unexpected shape.`);
+      throw new F1ApiError("INVALID_RESPONSE", `La respuesta de la API de F1 para ${path} tiene una forma inesperada.`);
     }
     return parsed.data;
   }
@@ -103,7 +103,7 @@ export function createF1Client(options: F1ClientOptions) {
   async function requestList<T>(path: string, key: string, item: z.ZodType<T>): Promise<T[]> {
     const { [key]: items } = await request(path, z.object({ [key]: z.array(item) }));
     if (!items || items.length === 0) {
-      throw new F1ApiError("EMPTY", `F1 API returned no items for ${path}.`);
+      throw new F1ApiError("EMPTY", `La API de F1 no devolvió elementos para ${path}.`);
     }
     return items as T[];
   }

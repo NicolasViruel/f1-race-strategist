@@ -1,57 +1,59 @@
 # F1 Race Strategist
 
-Pick a race, build a tyre strategy, run a simulation and read the breakdown. TypeScript end to end: Fastify backend, React + Vite frontend.
+Se elige una carrera, se arma una estrategia de neumáticos, se corre una simulación y se lee el desglose. TypeScript de punta a punta: backend con Fastify y frontend con React + Vite.
 
-## Run it
+## Cómo correrlo
 
-Requires Node 22 or newer (some test dependencies do not support older versions).
+Requiere Node 22 o superior (algunas dependencias de test no soportan versiones anteriores).
 
 ```bash
 npm install
-npm run dev        # backend on :3001, frontend on :5173
+npm run dev        # backend en :3001, frontend en :5173
 ```
 
-Open http://localhost:5173. The F1 API is hosted on a free tier and sleeps when idle, so the first request can take up to a minute; the UI says so while loading, and the backend retries.
+Abrir http://localhost:5173. La API de F1 está en un plan gratuito y se duerme cuando no se usa, así que la primera solicitud puede tardar hasta un minuto. La interfaz lo avisa mientras carga y el backend reintenta.
 
 ```bash
-npm test           # backend and frontend tests
+npm test           # tests del backend y del frontend
 npm run typecheck
 npm run build
 ```
 
-Optional environment variables: `PORT` (backend, default 3001) and `F1_API_URL` (default `https://tech-challenge101.onrender.com`).
+Variables de entorno opcionales: `PORT` (backend, por defecto 3001) y `F1_API_URL` (por defecto `https://tech-challenge101.onrender.com`).
 
-## How it is organised
+## Cómo está organizado
 
 ```
 backend/src
-  domain/        pure simulation and strategy validation (no I/O)
-  infra/         F1 API client: timeout, retries, response validation
-  application/   use cases: race overview, run simulation, error mapping
-  http/          Fastify routes
-frontend/src     React UI (container components own state, presentational ones render)
+  domain/        simulación y validación de la estrategia, puras (sin I/O)
+  infra/         cliente de la API de F1: timeout, reintentos, validación de respuestas
+  application/   casos de uso: resumen de carrera, correr la simulación, mapeo de errores
+  http/          rutas de Fastify
+frontend/src     interfaz en React (los contenedores guardan el estado, los presentacionales dibujan)
 ```
 
-The backend exposes `GET /api/races`, `GET /api/races/:raceId` (race, circuit, weather, parameters, tyres and drivers in one call) and `POST /api/races/:raceId/simulate`.
+El backend expone `GET /api/races`, `GET /api/races/:raceId` (carrera, circuito, clima, parámetros, neumáticos y pilotos en una sola llamada) y `POST /api/races/:raceId/simulate`.
 
-Errors: an invalid strategy returns `400` with every broken rule listed; a missing race is `404`; the F1 API being down, empty or returning something unexpected is `502`. The UI shows the server's message and offers a retry.
+Errores: una estrategia inválida devuelve `400` con todas las reglas rotas; una carrera inexistente es `404`; que la API de F1 esté caída, vacía o devuelva algo inesperado es `502`. La interfaz muestra el mensaje del servidor y ofrece reintentar.
 
-## Simulation assumptions
+Los textos de la interfaz y los mensajes de error están en español. Los datos que llegan de la API de F1 (nombres, resúmenes del clima, tipo de circuito) se muestran tal como vienen, en inglés.
 
-The model is deterministic, so the same strategy always gives the same result.
+## Supuestos de la simulación
 
-- Lap time = `baseLapTime / (driver.pace × team.carPerformance)` + tyre pace offset + `tyre.degradation × circuit.tyreWear × tyre age` + `fuelEffectPerLap × laps remaining` + rain penalty.
-- Tyre age restarts at 0 after every pit stop.
-- Each pit stop costs `pitStopLoss + tyreChangeTime` from the race's simulation parameters.
-- Rain penalty: 30 s per lap for every unit of rain intensity outside the compound's optimal range. The 30 is my own constant, not from the API.
-- Not modelled, only shown on screen: `lapTimeVariance`, `safetyCarProbability`, driver `consistency`, overtaking difficulty and track temperature.
-- Validation: stint laps must add up to the race laps, every stint needs at least one lap, compounds must exist, and the stops must reach `minimumPitStops`. In a dry race (no forecast segment with rain) at least two different compounds are required. That last rule comes from real F1, not from the brief.
+El modelo es determinista: la misma estrategia siempre da el mismo resultado.
 
-## What I would improve with more time
+- Tiempo de vuelta = `baseLapTime / (driver.pace × team.carPerformance)` + ritmo del neumático + `tyre.degradation × circuit.tyreWear × edad del neumático` + `fuelEffectPerLap × vueltas restantes` + penalización por lluvia.
+- La edad del neumático vuelve a 0 después de cada parada en boxes.
+- Cada parada cuesta `pitStopLoss + tyreChangeTime`, tomados de los parámetros de simulación de la carrera.
+- Penalización por lluvia: 30 s por vuelta por cada unidad de intensidad de lluvia fuera del rango óptimo del compuesto. El 30 es una constante propia, no viene de la API.
+- No se modela, solo se muestra en pantalla: `lapTimeVariance`, `safetyCarProbability`, la `consistency` del piloto, la dificultad de adelantamiento y la temperatura de pista.
+- Validación: las vueltas de los stints deben sumar las de la carrera, cada stint necesita al menos una vuelta, los compuestos deben existir y las paradas deben alcanzar `minimumPitStops`. En una carrera en seco (ningún tramo del pronóstico con lluvia) se exigen al menos dos compuestos distintos. Esta última regla viene de la F1 real, no del enunciado.
 
-- Use the randomness the API hints at (variance, safety cars, consistency) with a seeded generator, and show a range instead of one number.
-- Let temperature affect tyre degradation.
-- Compare several strategies side by side, and suggest a good one.
-- Share the API types between frontend and backend (or generate them from the OpenAPI spec) instead of duplicating them.
-- Cache the F1 API responses in the backend, since the data never changes.
-- Add an end-to-end test with a real browser, and a per-lap chart in the result.
+## Qué mejoraría con más tiempo
+
+- Usar la aleatoriedad que insinúa la API (varianza, safety cars, consistencia) con un generador con semilla, y mostrar un rango en lugar de un solo número.
+- Hacer que la temperatura afecte la degradación de los neumáticos.
+- Comparar varias estrategias lado a lado (hoy cada corrida reemplaza a la anterior) y sugerir una buena.
+- Compartir los tipos de la API entre frontend y backend (o generarlos desde la especificación OpenAPI) en lugar de duplicarlos.
+- Cachear las respuestas de la API de F1 en el backend, ya que los datos no cambian.
+- Agregar un test de punta a punta con un navegador real y un gráfico por vuelta en el resultado.

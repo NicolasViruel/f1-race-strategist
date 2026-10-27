@@ -5,7 +5,7 @@ export type AsyncState<T> =
   | { status: "error"; message: string }
   | { status: "success"; data: T };
 
-/** Runs `load` on mount and whenever `retry` is called; ignores stale responses. */
+/** Ejecuta `load` al montar y cada vez que se llama a `retry`; ignora respuestas viejas. */
 export function useAsync<T>(load: () => Promise<T>): AsyncState<T> & { retry: () => void } {
   const [state, setState] = useState<AsyncState<T>>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
@@ -17,12 +17,12 @@ export function useAsync<T>(load: () => Promise<T>): AsyncState<T> & { retry: ()
       (data) => !cancelled && setState({ status: "success", data }),
       (error: unknown) =>
         !cancelled &&
-        setState({ status: "error", message: error instanceof Error ? error.message : "Unexpected error." }),
+        setState({ status: "error", message: error instanceof Error ? error.message : "Error inesperado." }),
     );
     return () => {
       cancelled = true;
     };
-    // `load` is stable per component instance; `attempt` triggers retries.
+    // `load` es estable por instancia del componente; `attempt` dispara los reintentos.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attempt]);
 

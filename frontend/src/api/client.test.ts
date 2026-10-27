@@ -23,14 +23,14 @@ describe("api client", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(
-        jsonResponse({ error: { code: "F1_API_UNAVAILABLE", message: "The F1 API is not responding." } }, 502),
+        jsonResponse({ error: { code: "F1_API_UNAVAILABLE", message: "La API de F1 no responde." } }, 502),
       ),
     );
 
     const error = await getRaces().catch((e: unknown) => e);
 
     expect(error).toBeInstanceOf(ApiError);
-    expect((error as ApiError).message).toBe("The F1 API is not responding.");
+    expect((error as ApiError).message).toBe("La API de F1 no responde.");
     expect((error as ApiError).code).toBe("F1_API_UNAVAILABLE");
   });
 
@@ -39,7 +39,7 @@ describe("api client", () => {
 
     const error = await getRaces().catch((e: unknown) => e);
 
-    expect((error as ApiError).message).toMatch(/something went wrong/i);
+    expect((error as ApiError).message).toMatch(/algo salió mal/i);
   });
 
   it("reports an unreachable server with a friendly message", async () => {
@@ -48,6 +48,6 @@ describe("api client", () => {
     const error = await getRaces().catch((e: unknown) => e);
 
     expect(error).toBeInstanceOf(ApiError);
-    expect((error as ApiError).message).toMatch(/could not reach the server/i);
+    expect((error as ApiError).message).toMatch(/no se pudo contactar al servidor/i);
   });
 });

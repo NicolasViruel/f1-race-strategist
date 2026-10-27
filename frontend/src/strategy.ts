@@ -1,6 +1,6 @@
 import type { Stint, Tyre } from "./api/types";
 
-/** A valid dry-race starting point: MEDIUM then HARD (or the first two compounds on offer). */
+/** Punto de partida válido para carrera en seco: MEDIUM y luego HARD (o los dos primeros compuestos disponibles). */
 export function defaultStrategy(raceLaps: number, tyres: Tyre[]): Stint[] {
   const preferred = ["MEDIUM", "HARD"]
     .map((compound) => tyres.find((tyre) => tyre.compound === compound))

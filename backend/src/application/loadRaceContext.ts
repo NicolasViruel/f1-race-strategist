@@ -1,7 +1,7 @@
 import type { F1Client } from "../infra/f1Client";
 import { withF1Errors } from "./f1Errors";
 
-/** Everything known about one race, fetched in parallel from the F1 API. */
+/** Todo lo que se sabe de una carrera, pedido en paralelo a la API de F1. */
 export async function loadRaceContext(f1: F1Client, raceId: string) {
   const [race, weather, simulationParameters, tyres, drivers, teams] = await withF1Errors(
     Promise.all([

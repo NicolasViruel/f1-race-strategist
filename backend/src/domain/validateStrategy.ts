@@ -25,18 +25,25 @@ export type StrategyValidation =
 const strategySchema = z
   .array(
     z.object({
-      compound: z.enum(COMPOUNDS),
-      laps: z.number().int().positive(),
+      compound: z.enum(COMPOUNDS, { errorMap: () => ({ message: "compuesto desconocido" }) }),
+      laps: z
+        .number({ required_error: "faltan las vueltas", invalid_type_error: "las vueltas deben ser un número" })
+        .int("las vueltas deben ser un número entero")
+        .positive("las vueltas deben ser mayores a cero"),
     }),
+    {
+      required_error: "falta la estrategia",
+      invalid_type_error: "la estrategia debe ser una lista de stints",
+    },
   )
-  .min(1);
+  .min(1, "la estrategia necesita al menos un stint");
 
 const isDryRace = (weather: WeatherSegment[]) => weather.every((s) => s.rainIntensity === 0);
 
 /**
- * Two layers: Zod checks the shape (known compound, positive integer laps,
- * at least one stint); the race rules run only on a well-formed strategy and
- * are all reported together so the user can fix them in one pass.
+ * Dos capas: Zod valida la forma (compuesto conocido, vueltas enteras positivas,
+ * al menos un stint); las reglas de carrera corren solo sobre una estrategia
+ * bien formada y se reportan todas juntas para que el usuario las corrija de una vez.
  */
 export function validateStrategy(raw: unknown, ctx: StrategyContext): StrategyValidation {
   const parsed = strategySchema.safeParse(raw);
@@ -45,7 +52,7 @@ export function validateStrategy(raw: unknown, ctx: StrategyContext): StrategyVa
       ok: false,
       issues: parsed.error.issues.map((issue) => ({
         code: "INVALID_SHAPE" as const,
-        message: `${issue.path.join(".") || "strategy"}: ${issue.message}`,
+        message: `${issue.path.join(".") || "estrategia"}: ${issue.message}`,
       })),
     };
   }
@@ -57,7 +64,7 @@ export function validateStrategy(raw: unknown, ctx: StrategyContext): StrategyVa
   if (totalLaps !== ctx.laps) {
     issues.push({
       code: "LAPS_MISMATCH",
-      message: `Stints add up to ${totalLaps} laps but the race has ${ctx.laps}.`,
+      message: `Los stints suman ${totalLaps} vueltas pero la carrera tiene ${ctx.laps}.`,
     });
   }
 
@@ -65,14 +72,14 @@ export function validateStrategy(raw: unknown, ctx: StrategyContext): StrategyVa
   if (pitStops < ctx.minimumPitStops) {
     issues.push({
       code: "MIN_PIT_STOPS",
-      message: `At least ${ctx.minimumPitStops} pit stop(s) required, got ${pitStops}.`,
+      message: `Se requieren al menos ${ctx.minimumPitStops} parada(s) en boxes y hay ${pitStops}.`,
     });
   }
 
   if (isDryRace(ctx.weather) && new Set(strategy.map((s) => s.compound)).size < 2) {
     issues.push({
       code: "DRY_COMPOUND_RULE",
-      message: "A dry race requires at least two different compounds.",
+      message: "Una carrera en seco requiere al menos dos compuestos distintos.",
     });
   }
 

@@ -133,7 +133,7 @@ describe("POST /api/races/:raceId/simulate", () => {
   };
 
   it("simulates a valid strategy and returns the breakdown", async () => {
-    // 2 SOFT laps at 99 s + 2 HARD laps at 100 s + one stop of 20 + 2 s
+    // 2 vueltas SOFT a 99 s + 2 vueltas HARD a 100 s + una parada de 20 + 2 s
     const response = await simulate(fakeF1(), valid);
     const body = response.json();
 

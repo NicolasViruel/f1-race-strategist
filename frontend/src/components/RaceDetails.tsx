@@ -4,12 +4,12 @@ import { CircuitCard, DriversTable, RaceSummary, TyresTable, WeatherCard } from 
 import { SimulationPanel } from "./SimulationPanel";
 import { StatusMessage } from "./StatusMessage";
 
-/** Loads and shows everything about one race. Mount with `key={raceId}` to reset on change. */
+/** Carga y muestra todo sobre una carrera. Montar con `key={raceId}` para reiniciar al cambiar. */
 export function RaceDetails({ raceId }: { raceId: string }) {
   const overview = useAsync(() => getRaceOverview(raceId));
 
   if (overview.status === "loading") {
-    return <StatusMessage kind="loading" message="Loading race information…" />;
+    return <StatusMessage kind="loading" message="Cargando información de la carrera…" />;
   }
   if (overview.status === "error") {
     return <StatusMessage kind="error" message={overview.message} onRetry={overview.retry} />;

@@ -10,7 +10,7 @@ interface Failure {
   issues: StrategyIssue[];
 }
 
-/** Owns the strategy being edited and the outcome of the last run. */
+/** Guarda la estrategia que se está editando y el resultado de la última corrida. */
 export function SimulationPanel({ overview }: { overview: RaceOverview }) {
   const { race, tyres, drivers } = overview;
   const [driverId, setDriverId] = useState(drivers[0]?.id ?? "");
@@ -29,7 +29,7 @@ export function SimulationPanel({ overview }: { overview: RaceOverview }) {
       setFailure(
         error instanceof ApiError
           ? { message: error.message, issues: error.issues ?? [] }
-          : { message: "Unexpected error. Please try again.", issues: [] },
+          : { message: "Error inesperado. Inténtalo de nuevo.", issues: [] },
       );
     } finally {
       setRunning(false);

@@ -17,8 +17,8 @@ const SOFT: Tyre = {
   optimalRainIntensity: { min: 0, max: 0.05 },
 };
 
-// Neutral fixture: every effect is zero unless a test turns it on, so each
-// expected value below can be computed by hand.
+// Escenario neutro: todos los efectos valen cero salvo que un test los active, así cada
+// valor esperado de abajo se puede calcular a mano.
 function input(overrides: Partial<SimulationInput> = {}): SimulationInput {
   return {
     circuit: { id: "c", name: "Test", laps: 10, baseLapTime: 100, tyreWear: 1 },
@@ -50,7 +50,7 @@ describe("simulate", () => {
   });
 
   it("adds tyre degradation that grows with tyre age", () => {
-    // age 0..9 => 0.1 * (0+1+...+9) = 4.5 s over a 10 x 100 s race
+    // edad 0..9 => 0.1 * (0+1+...+9) = 4.5 s en una carrera de 10 x 100 s
     const result = simulate(input());
 
     expect(result.stints[0]!.degradationLossSeconds).toBeCloseTo(4.5);
@@ -58,7 +58,7 @@ describe("simulate", () => {
   });
 
   it("resets tyre age after a pit stop and charges pit loss plus tyre change time", () => {
-    // each 5-lap stint: 5 * 100 + 0.1 * (0+1+2+3+4) = 501 ; pit = 20 + 2
+    // cada stint de 5 vueltas: 5 * 100 + 0.1 * (0+1+2+3+4) = 501 ; parada = 20 + 2
     const result = simulate(
       input({
         strategy: [
@@ -76,14 +76,14 @@ describe("simulate", () => {
   });
 
   it("applies the compound pace offset", () => {
-    // SOFT is 1 s faster per lap than HARD: 10 * 99 + 4.5
+    // SOFT es 1 s más rápido por vuelta que HARD: 10 * 99 + 4.5
     const result = simulate(input({ strategy: [{ compound: "SOFT", laps: 10 }] }));
 
     expect(result.totalTimeSeconds).toBeCloseTo(994.5);
   });
 
   it("scales the base lap time by driver pace and car performance", () => {
-    // 100 / (0.5 * 1) = 200 s per lap
+    // 100 / (0.5 * 1) = 200 s por vuelta
     const result = simulate(
       input({
         driver: { id: "d", name: "Driver", teamId: "t", pace: 0.5, consistency: 1 },
@@ -95,7 +95,7 @@ describe("simulate", () => {
   });
 
   it("makes early laps slower because of the fuel load", () => {
-    // 0.1 * (9+8+...+0) = 4.5 s on top of 1000 s
+    // 0.1 * (9+8+...+0) = 4.5 s sobre 1000 s
     const result = simulate(
       input({
         params: { pitStopLoss: 20, tyreChangeTime: 2, fuelEffectPerLap: 0.1, minimumPitStops: 1 },
@@ -107,7 +107,7 @@ describe("simulate", () => {
   });
 
   it("penalises a compound outside its optimal rain range", () => {
-    // intensity 0.35, HARD max 0.15 => 0.2 outside range * 30 s/unit = 6 s per lap, 10 laps
+    // intensidad 0.35, máximo del HARD 0.15 => 0.2 fuera del rango * 30 s/unidad = 6 s por vuelta, 10 vueltas
     const result = simulate(
       input({
         weather: [{ fromLap: 1, toLap: 10, temperature: 25, rainIntensity: 0.35 }],

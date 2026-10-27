@@ -10,7 +10,7 @@ const requestSchema = z.object({ driverId: z.string().min(1), strategy: z.unknow
 export async function runSimulation(f1: F1Client, raceId: string, body: unknown) {
   const request = requestSchema.safeParse(body);
   if (!request.success) {
-    throw new AppError("INVALID_REQUEST", 400, "A driverId and a strategy are required.");
+    throw new AppError("INVALID_REQUEST", 400, "Se requieren un driverId y una estrategia.");
   }
 
   const { race, circuit, weather, simulationParameters, tyres, drivers, teams } =
@@ -19,7 +19,7 @@ export async function runSimulation(f1: F1Client, raceId: string, body: unknown)
   const driver = drivers.find((d) => d.id === request.data.driverId);
   const team = teams.find((t) => t.id === driver?.teamId);
   if (!driver || !team) {
-    throw new AppError("INVALID_REQUEST", 400, `Unknown driver: ${request.data.driverId}.`);
+    throw new AppError("INVALID_REQUEST", 400, `Piloto desconocido: ${request.data.driverId}.`);
   }
 
   const validation = validateStrategy(request.data.strategy, {
@@ -28,7 +28,7 @@ export async function runSimulation(f1: F1Client, raceId: string, body: unknown)
     weather: weather.forecast,
   });
   if (!validation.ok) {
-    throw new AppError("INVALID_STRATEGY", 400, "The strategy is not valid.", validation.issues);
+    throw new AppError("INVALID_STRATEGY", 400, "La estrategia no es válida.", validation.issues);
   }
 
   const result = simulate({

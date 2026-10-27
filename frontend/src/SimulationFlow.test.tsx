@@ -26,8 +26,8 @@ const postedBody = (fetchFn: ReturnType<typeof stubApi>) => {
 
 async function openRace() {
   render(<App />);
-  await userEvent.selectOptions(await screen.findByLabelText("Race"), "race-01");
-  return screen.findByRole("region", { name: "Strategy" });
+  await userEvent.selectOptions(await screen.findByLabelText("Carrera"), "race-01");
+  return screen.findByRole("region", { name: "Estrategia" });
 }
 
 describe("strategy builder", () => {
@@ -35,37 +35,37 @@ describe("strategy builder", () => {
     stubApi(() => jsonResponse(simulationResponse));
     const strategy = await openRace();
 
-    expect(within(strategy).getByLabelText("Stint 1 compound")).toHaveValue("SOFT");
-    expect(within(strategy).getByLabelText("Stint 1 laps")).toHaveValue(29);
-    expect(within(strategy).getByLabelText("Stint 2 compound")).toHaveValue("HARD");
-    expect(within(strategy).getByLabelText("Stint 2 laps")).toHaveValue(28);
-    expect(within(strategy).getByText("57 of 57 laps assigned")).toBeInTheDocument();
-    expect(within(strategy).getByLabelText("Driver")).toHaveValue("driver-01");
+    expect(within(strategy).getByLabelText("Compuesto del stint 1")).toHaveValue("SOFT");
+    expect(within(strategy).getByLabelText("Vueltas del stint 1")).toHaveValue(29);
+    expect(within(strategy).getByLabelText("Compuesto del stint 2")).toHaveValue("HARD");
+    expect(within(strategy).getByLabelText("Vueltas del stint 2")).toHaveValue(28);
+    expect(within(strategy).getByText("57 de 57 vueltas asignadas")).toBeInTheDocument();
+    expect(within(strategy).getByLabelText("Piloto")).toHaveValue("driver-01");
   });
 
   it("updates the lap counter as the user edits a stint", async () => {
     stubApi(() => jsonResponse(simulationResponse));
     const strategy = await openRace();
 
-    const laps = within(strategy).getByLabelText("Stint 2 laps");
+    const laps = within(strategy).getByLabelText("Vueltas del stint 2");
     await userEvent.clear(laps);
     await userEvent.type(laps, "20");
 
-    expect(within(strategy).getByText("49 of 57 laps assigned")).toBeInTheDocument();
+    expect(within(strategy).getByText("49 de 57 vueltas asignadas")).toBeInTheDocument();
   });
 
   it("adds and removes stints, keeping at least one", async () => {
     stubApi(() => jsonResponse(simulationResponse));
     const strategy = await openRace();
 
-    await userEvent.click(within(strategy).getByRole("button", { name: "Add stint" }));
-    expect(within(strategy).getByLabelText("Stint 3 laps")).toBeInTheDocument();
+    await userEvent.click(within(strategy).getByRole("button", { name: "Agregar stint" }));
+    expect(within(strategy).getByLabelText("Vueltas del stint 3")).toBeInTheDocument();
 
-    await userEvent.click(within(strategy).getByRole("button", { name: "Remove stint 3" }));
-    expect(within(strategy).queryByLabelText("Stint 3 laps")).not.toBeInTheDocument();
+    await userEvent.click(within(strategy).getByRole("button", { name: "Quitar stint 3" }));
+    expect(within(strategy).queryByLabelText("Vueltas del stint 3")).not.toBeInTheDocument();
 
-    await userEvent.click(within(strategy).getByRole("button", { name: "Remove stint 2" }));
-    expect(within(strategy).getByRole("button", { name: "Remove stint 1" })).toBeDisabled();
+    await userEvent.click(within(strategy).getByRole("button", { name: "Quitar stint 2" }));
+    expect(within(strategy).getByRole("button", { name: "Quitar stint 1" })).toBeDisabled();
   });
 });
 
@@ -74,10 +74,10 @@ describe("running the simulation", () => {
     const fetchFn = stubApi(() => jsonResponse(simulationResponse));
     const strategy = await openRace();
 
-    await userEvent.selectOptions(within(strategy).getByLabelText("Stint 1 compound"), "HARD");
-    await userEvent.click(within(strategy).getByRole("button", { name: "Run simulation" }));
+    await userEvent.selectOptions(within(strategy).getByLabelText("Compuesto del stint 1"), "HARD");
+    await userEvent.click(within(strategy).getByRole("button", { name: "Ejecutar simulación" }));
 
-    const result = await screen.findByRole("region", { name: "Result" });
+    const result = await screen.findByRole("region", { name: "Resultado" });
     expect(postedBody(fetchFn)).toEqual({
       driverId: "driver-01",
       strategy: [
@@ -99,8 +99,8 @@ describe("running the simulation", () => {
     expect(within(rows[1]!).getByText("HARD")).toBeInTheDocument();
     expect(within(rows[1]!).getByText("30–57")).toBeInTheDocument();
 
-    expect(within(result).getByText("After lap 29: SOFT → HARD")).toBeInTheDocument();
-    expect(within(result).getByText("24.5 s lost")).toBeInTheDocument();
+    expect(within(result).getByText("Tras la vuelta 29: SOFT → HARD")).toBeInTheDocument();
+    expect(within(result).getByText("24.5 s perdidos")).toBeInTheDocument();
   });
 
   it("disables the button while the simulation is running", async () => {
@@ -108,13 +108,13 @@ describe("running the simulation", () => {
     stubApi(() => new Promise<Response>((resolve) => (finish = resolve)));
     const strategy = await openRace();
 
-    await userEvent.click(within(strategy).getByRole("button", { name: "Run simulation" }));
+    await userEvent.click(within(strategy).getByRole("button", { name: "Ejecutar simulación" }));
 
-    expect(within(strategy).getByRole("button", { name: "Simulating…" })).toBeDisabled();
+    expect(within(strategy).getByRole("button", { name: "Simulando…" })).toBeDisabled();
 
     finish(jsonResponse(simulationResponse));
     await waitFor(() =>
-      expect(within(strategy).getByRole("button", { name: "Run simulation" })).toBeEnabled(),
+      expect(within(strategy).getByRole("button", { name: "Ejecutar simulación" })).toBeEnabled(),
     );
   });
 
@@ -124,10 +124,13 @@ describe("running the simulation", () => {
         {
           error: {
             code: "INVALID_STRATEGY",
-            message: "The strategy is not valid.",
+            message: "La estrategia no es válida.",
             issues: [
-              { code: "LAPS_MISMATCH", message: "Stints add up to 49 laps but the race has 57." },
-              { code: "DRY_COMPOUND_RULE", message: "A dry race requires at least two different compounds." },
+              { code: "LAPS_MISMATCH", message: "Los stints suman 49 vueltas pero la carrera tiene 57." },
+              {
+                code: "DRY_COMPOUND_RULE",
+                message: "Una carrera en seco requiere al menos dos compuestos distintos.",
+              },
             ],
           },
         },
@@ -136,25 +139,27 @@ describe("running the simulation", () => {
     );
     const strategy = await openRace();
 
-    await userEvent.click(within(strategy).getByRole("button", { name: "Run simulation" }));
+    await userEvent.click(within(strategy).getByRole("button", { name: "Ejecutar simulación" }));
 
     const alert = await screen.findByRole("alert");
-    expect(alert).toHaveTextContent("The strategy is not valid.");
-    expect(within(alert).getByText("Stints add up to 49 laps but the race has 57.")).toBeInTheDocument();
+    expect(alert).toHaveTextContent("La estrategia no es válida.");
     expect(
-      within(alert).getByText("A dry race requires at least two different compounds."),
+      within(alert).getByText("Los stints suman 49 vueltas pero la carrera tiene 57."),
     ).toBeInTheDocument();
-    expect(screen.queryByRole("region", { name: "Result" })).not.toBeInTheDocument();
+    expect(
+      within(alert).getByText("Una carrera en seco requiere al menos dos compuestos distintos."),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Resultado" })).not.toBeInTheDocument();
   });
 
   it("shows the message when the F1 API fails while simulating", async () => {
     stubApi(() =>
-      jsonResponse({ error: { code: "F1_API_UNAVAILABLE", message: "The F1 API is not responding." } }, 502),
+      jsonResponse({ error: { code: "F1_API_UNAVAILABLE", message: "La API de F1 no responde." } }, 502),
     );
     const strategy = await openRace();
 
-    await userEvent.click(within(strategy).getByRole("button", { name: "Run simulation" }));
+    await userEvent.click(within(strategy).getByRole("button", { name: "Ejecutar simulación" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent("The F1 API is not responding.");
+    expect(await screen.findByRole("alert")).toHaveTextContent("La API de F1 no responde.");
   });
 });

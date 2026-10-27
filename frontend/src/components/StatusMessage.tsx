@@ -17,7 +17,7 @@ export function StatusMessage({ kind, message, onRetry }: Props) {
       <p>{message}</p>
       {onRetry && (
         <button type="button" onClick={onRetry}>
-          Try again
+          Intentar de nuevo
         </button>
       )}
     </div>

@@ -7,7 +7,7 @@ import type {
   WeatherSegment,
 } from "./types";
 
-/** Seconds lost per lap for each unit of rain intensity outside a tyre's optimal range. */
+/** Segundos perdidos por vuelta por cada unidad de lluvia fuera del rango óptimo del neumático. */
 export const WET_MISMATCH_SECONDS_PER_UNIT = 30;
 
 function rainIntensityAt(weather: WeatherSegment[], lap: number): number {
@@ -22,15 +22,16 @@ function wetPenalty(tyre: Tyre, rainIntensity: number): number {
 }
 
 /**
- * Deterministic lap-by-lap race simulation. Assumes the strategy was already
- * validated (stint laps add up to the race laps, compounds exist).
+ * Simulación determinista de carrera, vuelta por vuelta. Asume que la estrategia
+ * ya fue validada (las vueltas de los stints suman las de la carrera y los
+ * compuestos existen).
  *
- * lap time = baseLapTime / (driver.pace * team.carPerformance)
- *          + tyre.pace
- *          + tyre.degradation * circuit.tyreWear * tyreAge
- *          + fuelEffectPerLap * lapsRemaining
- *          + wet penalty
- * Each pit stop adds pitStopLoss + tyreChangeTime and resets tyre age.
+ * tiempo de vuelta = baseLapTime / (driver.pace * team.carPerformance)
+ *                  + tyre.pace
+ *                  + tyre.degradation * circuit.tyreWear * edad del neumático
+ *                  + fuelEffectPerLap * vueltas restantes
+ *                  + penalización por lluvia
+ * Cada parada en boxes suma pitStopLoss + tyreChangeTime y reinicia la edad del neumático.
  */
 export function simulate(input: SimulationInput): SimulationResult {
   const { circuit, params, weather, tyres, driver, team, strategy } = input;
