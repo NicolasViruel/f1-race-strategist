@@ -1,10 +1,10 @@
-import Fastify from "fastify";
-import cors from "@fastify/cors";
+import { buildApp } from "./http/app";
+import { createF1Client } from "./infra/f1Client";
 
-const app = Fastify({ logger: true });
-await app.register(cors, { origin: true });
+const f1 = createF1Client({
+  baseUrl: process.env.F1_API_URL ?? "https://tech-challenge101.onrender.com",
+});
 
-app.get("/health", async () => ({ status: "ok" }));
-
+const app = buildApp(f1, { logger: true });
 const port = Number(process.env.PORT ?? 3001);
 await app.listen({ port, host: "0.0.0.0" });

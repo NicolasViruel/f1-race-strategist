@@ -20,7 +20,7 @@ Las citas del PDF se dejan en inglés textual (entre comillas) con su aclaració
 - [x] T2 (S6, S9) Simulador puro en el dominio del backend, tests primero | inline | commit: ver git log (feat: simulator)
 - [x] T3 (S7, S10) Validación de la estrategia con Zod | inline | commit: ver git log (feat: validation)
 - [x] T4 (S5, S7) Adaptador cliente de la API F1 con timeout, reintento y mapeo de errores | inline | commit: ver git log (feat: f1 client)
-- [ ] T5 (S5) Endpoints HTTP: datos de carrera + POST simulate | inline | commit: -
+- [x] T5 (S5) Endpoints HTTP: datos de carrera + POST simulate | inline | commit: ver git log (feat: http endpoints)
 - [ ] T6 (S1, S2) Frontend: lista de carreras e info de carrera/circuito/neumáticos/pilotos/clima | inline | commit: -
 - [ ] T7 (S3, S4, S7) Frontend: constructor de estrategia, ejecución, desglose del resultado y errores | inline | commit: -
 - [ ] T8 (S8) README y verificación final desde un checkout limpio | inline | commit: -
@@ -37,4 +37,5 @@ Las citas del PDF se dejan en inglés textual (entre comillas) con su aclaració
 - T2: RED observado (módulo inexistente), GREEN 9/9. Constante WET_MISMATCH_SECONDS_PER_UNIT=30 es un supuesto nuestro.
 - T3: RED observado (módulo inexistente), GREEN 12/12 (21 en total). "Carrera seca" = ningún tramo del pronóstico con rainIntensity > 0. Todas las reglas rotas se reportan juntas.
 - T4: RED observado, GREEN 11/11 (32 en total). Verificado contra la API real: 7 carreras, 20 pilotos, 10 equipos, 5 neumáticos, 7 circuitos. Reintentos (2) solo para timeout, red y 5xx; 404 no reintenta; lista vacía = EMPTY; forma inesperada = INVALID_RESPONSE. Timeout por intento 70 s por el arranque en frío.
-- Siguiente: T5 endpoints HTTP.
+- T5: RED observado, GREEN 11/11 (43 en total) y prueba de punta a punta con el servidor real. Endpoints: GET /api/races, GET /api/races/:raceId (todo en una llamada, pilotos con su equipo), POST /api/races/:raceId/simulate. Errores: 400 INVALID_REQUEST / INVALID_STRATEGY (con lista de reglas rotas), 404 RACE_NOT_FOUND, 502 F1_API_UNAVAILABLE / EMPTY / INVALID_RESPONSE. Capas: http -> application (casos de uso) -> domain / infra.
+- Siguiente: T6 frontend, lista de carreras e información.
