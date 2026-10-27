@@ -1,4 +1,5 @@
-export type Compound = "SOFT" | "MEDIUM" | "HARD" | "INTERMEDIATE" | "WET";
+export const COMPOUNDS = ["SOFT", "MEDIUM", "HARD", "INTERMEDIATE", "WET"] as const;
+export type Compound = (typeof COMPOUNDS)[number];
 
 export interface Tyre {
   compound: Compound;

@@ -18,7 +18,7 @@ Las citas del PDF se dejan en inglés textual (entre comillas) con su aclaració
 ## Tasks
 - [x] T1 (S8) Scaffold de npm workspaces, TS, Vitest | inline | commit: c757329
 - [x] T2 (S6, S9) Simulador puro en el dominio del backend, tests primero | inline | commit: ver git log (feat: simulator)
-- [ ] T3 (S7, S10) Validación de la estrategia con Zod | inline | commit: -
+- [x] T3 (S7, S10) Validación de la estrategia con Zod | inline | commit: ver git log (feat: validation)
 - [ ] T4 (S5, S7) Adaptador cliente de la API F1 con timeout, reintento y mapeo de errores | inline | commit: -
 - [ ] T5 (S5) Endpoints HTTP: datos de carrera + POST simulate | inline | commit: -
 - [ ] T6 (S1, S2) Frontend: lista de carreras e info de carrera/circuito/neumáticos/pilotos/clima | inline | commit: -
@@ -35,4 +35,5 @@ Las citas del PDF se dejan en inglés textual (entre comillas) con su aclaració
 - Forma de los datos verificada: existe `/api/tyres` (no figura en la tabla del PDF): compound, pace, degradation, wetPerformance, optimalRainIntensity. Parámetros de simulación: lapTimeVariance, pitStopLoss, tyreChangeTime, fuelEffectPerLap, safetyCarProbability, minimumPitStops.
 - Declaración de ruta: todas las tareas inline; no se cumple ningún trigger de Writer (unidades secuenciales y dependientes).
 - T2: RED observado (módulo inexistente), GREEN 9/9. Constante WET_MISMATCH_SECONDS_PER_UNIT=30 es un supuesto nuestro.
-- Siguiente: T3 validación de la estrategia.
+- T3: RED observado (módulo inexistente), GREEN 12/12 (21 en total). "Carrera seca" = ningún tramo del pronóstico con rainIntensity > 0. Todas las reglas rotas se reportan juntas.
+- Siguiente: T4 cliente de la API F1.
