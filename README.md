@@ -4,7 +4,7 @@ Pick a race, build a tyre strategy, run a simulation and read the breakdown. Typ
 
 ## Run it
 
-Requires Node 20+ (developed on Node 22).
+Requires Node 22 or newer (some test dependencies do not support older versions).
 
 ```bash
 npm install
