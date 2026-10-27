@@ -80,7 +80,7 @@ button {
 
 dl {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: 1fr auto;
   gap: 4px 16px;
   margin: 0;
 }
@@ -91,6 +91,7 @@ dt {
 
 dd {
   margin: 0;
+  text-align: right;
 }
 
 ul.plain {
@@ -150,10 +151,16 @@ td {
   color: #ff8a80;
 }
 
-.grid + .card,
-.card + .card,
-.card + .status {
+/* Separación solo entre bloques de la página; dentro de la grilla manda el gap. */
+.page > .grid + .card,
+.page > .card + .card,
+.page > .card + .status,
+.page > .status + .card {
   margin-top: 16px;
+}
+
+.card--wide {
+  grid-column: 1 / -1;
 }
 
 .stints {
@@ -238,4 +245,28 @@ button:disabled {
 h3 {
   margin: 16px 0 8px;
   font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 16px 12px 48px;
+  }
+
+  .card {
+    padding: 12px 8px;
+  }
+
+  table {
+    font-size: 0.74rem;
+  }
+
+  th,
+  td {
+    padding: 6px 4px;
+  }
+
+  .compound {
+    padding: 2px 6px;
+    font-size: 0.64rem;
+  }
 }

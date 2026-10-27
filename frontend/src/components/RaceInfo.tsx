@@ -69,7 +69,7 @@ export function WeatherCard({ weather }: { weather: Weather }) {
 
 export function TyresTable({ tyres }: { tyres: Tyre[] }) {
   return (
-    <section aria-label="Neumáticos" className="card">
+    <section aria-label="Neumáticos" className="card card--wide">
       <h2>Neumáticos</h2>
       <table>
         <caption>
@@ -82,7 +82,7 @@ export function TyresTable({ tyres }: { tyres: Tyre[] }) {
             <th>Ritmo</th>
             <th>Degradación</th>
             <th>Agarre en mojado</th>
-            <th>Mejor con lluvia de</th>
+            <th>Lluvia óptima</th>
           </tr>
         </thead>
         <tbody>
@@ -107,7 +107,7 @@ export function TyresTable({ tyres }: { tyres: Tyre[] }) {
 
 export function DriversTable({ drivers }: { drivers: Driver[] }) {
   return (
-    <section aria-label="Pilotos" className="card">
+    <section aria-label="Pilotos" className="card card--wide">
       <h2>Pilotos</h2>
       <table>
         <thead>
