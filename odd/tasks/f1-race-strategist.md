@@ -23,7 +23,7 @@ Las citas del PDF se dejan en inglés textual (entre comillas) con su aclaració
 - [x] T5 (S5) Endpoints HTTP: datos de carrera + POST simulate | inline | commit: ver git log (feat: http endpoints)
 - [x] T6 (S1, S2) Frontend: lista de carreras e info de carrera/circuito/neumáticos/pilotos/clima | inline | commit: ver git log (feat: race info ui)
 - [x] T7 (S3, S4, S7) Frontend: constructor de estrategia, ejecución, desglose del resultado y errores | inline | commit: ver git log (feat: strategy builder)
-- [ ] T8 (S8) README y verificación final desde un checkout limpio | inline | commit: -
+- [x] T8 (S8) README y verificación final desde un checkout limpio | inline | commit: ver git log (docs: README)
 
 ## Log
 - L1 (2026-10-27) Requerimiento: desafío técnico "F1 Race Strategist". Nicolás define el alcance (verificar los requerimientos del desafío y construirlo con ODD); el asistente analiza y propone.
